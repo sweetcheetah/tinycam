@@ -1,6 +1,4 @@
-#!/usr/bin/python3
-
-# TODO merge this with camera.py to make a streaming server that also captures motion
+#!/usr/bin/env python3 
 
 import io
 import logging
@@ -18,7 +16,7 @@ PAGE = """\
 <title>Streaming</title>
 </head>
 <body>
-<h1>Streaming</h1>
+<h1>TinyCam Streaming</h1>
 <img src="stream.mjpg" width="640" height="480" />
 </body>
 </html>
