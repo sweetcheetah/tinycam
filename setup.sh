@@ -1,6 +1,12 @@
-# create systemd service file
-    # need to do this here so paths can point to home (can't use env vars in systemd files)
+#!/bin/sh
+echo "Install systemd service for TinyCam"
+mkdir -p $HOME/.config/systemd/user/
+mkdir -p $HOME/tinycam/images
+cp tinycam.service $HOME/.config/systemd/user/
 
-# install systemd service
+echo "Enable and start TinyCam"
+systemctl --user enable tinycam
+systemctl --user start tinycam
 
-# enable and start systemd service
+echo "Enable user process lingering for $USER"
+loginctl enable-linger
