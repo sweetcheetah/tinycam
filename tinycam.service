@@ -1,9 +1,9 @@
 [Unit]
-Description=Python Demo Service
+Description=TinyCam Service
 
 [Service]
-ExecStart=/usr/bin/python /home/kinch/motion.py
-WorkingDirectory=/home/kinch/images
+ExecStart=/usr/bin/python $HOME/motion.py
+WorkingDirectory=$HOME/images
 Environment=PYTHONUNBUFFERED=1
 Restart=on-failure
 
