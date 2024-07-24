@@ -1,5 +1,5 @@
 # TinyCam Camera
-This is the camera portion of my TinyCam software. It uses the excellent [Picamera2 Library] to access the camera, which offers much higher quality and lower resource utilization than other solutions. There is a streaming server which simply streams video from the camera. There is also a motion capture server which captures video in response to motion, with a preview image.
+This is the camera portion of my TinyCam software. It uses the excellent [Picamera2 Library](https://github.com/raspberrypi/picamera2) to access the camera, which offers much higher quality and lower resource utilization than other solutions. There is a streaming server which simply streams video from the camera. There is also a motion capture server which captures video in response to motion, with a preview image.
 
 ## Hardware
 TinyCam requires a Raspberry Pi and an official Raspberry Pi Camera module. I have tested it on rpi 3b+, 4, 5, and zero w 1.1 with camera modules v2.1 and v3.0, both normal and noIR versions. I have tested it on 64 bit versions of Raspberry Pi on all of these models.
@@ -81,12 +81,24 @@ python motion.py
 
 You should see messages similar to the following:
 ```sh
-messages...
+[47:01:59.867601119] [7992]  INFO Camera camera_manager.cpp:313 libcamera v0.3.0+65-6ddd79b5
+[47:01:59.979183558] [7995]  WARN RPiSdn sdn.cpp:40 Using legacy SDN tuning - please consider moving SDN inside rpi.denoise
+[47:01:59.981373432] [7995]  INFO RPI vc4.cpp:446 Registered camera /base/soc/i2c0mux/i2c@1/imx708@1a to Unicam device /dev/media1 and ISP device /dev/media2
+[47:01:59.981449913] [7995]  INFO RPI pipeline_base.cpp:1104 Using configuration file '/usr/share/libcamera/pipeline/rpi/vc4/rpi_apps.yaml'
+[47:01:59.983979841] [7992]  INFO Camera camera_manager.cpp:313 libcamera v0.3.0+65-6ddd79b5
+[47:02:00.110780404] [7998]  WARN RPiSdn sdn.cpp:40 Using legacy SDN tuning - please consider moving SDN inside rpi.denoise
+[47:02:00.112776169] [7998]  INFO RPI vc4.cpp:446 Registered camera /base/soc/i2c0mux/i2c@1/imx708@1a to Unicam device /dev/media1 and ISP device /dev/media2
+[47:02:00.112850501] [7998]  INFO RPI pipeline_base.cpp:1104 Using configuration file '/usr/share/libcamera/pipeline/rpi/vc4/rpi_apps.yaml'
+[47:02:00.119901826] [7992]  INFO Camera camera.cpp:1183 configuring streams: (0) 1280x720-RGB888 (1) 320x240-YUV420 (2) 1536x864-SBGGR10_CSI2P
+[47:02:00.120402619] [7998]  INFO RPI vc4.cpp:621 Sensor: /base/soc/i2c0mux/i2c@1/imx708@1a - Selected sensor format: 1536x864-SBGGR10_1X10 - Selected unicam format: 1536x864-pBAA
 ```
 
 And when there is motion in front of the camera lens, messages like this:
 ```sh
-messages...
+New motion 47.46110677083333 over threshold 22
+preview saved to 20240724-121740.jpg
+start recording to 20240724-121740.mp4
+stop recording to 20240724-121740.mp4
 ```
 
 Press control-c to exit the motion camera. You are now ready to install the camera to run as a systemd service.
