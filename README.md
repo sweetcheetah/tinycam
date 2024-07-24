@@ -1,29 +1,51 @@
 # TinyCam Camera
-This is the camera portion of my TinyCam software. It uses the excellent [Picamera2 Library] to access the camera, which offers much higher quality and lower resource utilization than I have seen from other solutions. There is a streaming server which simply streams video from the camera. There is also a motion capture server which captures video in response to motion, with a preview image.
+This is the camera portion of my TinyCam software. It uses the excellent [Picamera2 Library] to access the camera, which offers much higher quality and lower resource utilization than other solutions. There is a streaming server which simply streams video from the camera. There is also a motion capture server which captures video in response to motion, with a preview image.
 
 ## Hardware
-TinyCam requires a Raspberry Pi and an official Raspberry Pi Camera module. I have personally tested it on rpi 3b+, 4, 5, and zero w 1.1 with camera modules v2.1 and v3.0, both IR and noIR versions. I have tested it on 64 bit versions of Raspberry Pi on all of these models.
+TinyCam requires a Raspberry Pi and an official Raspberry Pi Camera module. I have tested it on rpi 3b+, 4, 5, and zero w 1.1 with camera modules v2.1 and v3.0, both normal and noIR versions. I have tested it on 64 bit versions of Raspberry Pi on all of these models.
 
 ## Optional Software
-Everyone has their own preferences for software to use on the Raspberry Pi. I usually access my pi devices via ssh and use screen to manage sessions. I use Vim as my editor. Feel free to use my public dotfiles if you don't have your own setup already.
-[Screen Cheat Sheet]
-[Vim Cheat Sheet]
-`sudo apt install -y vim screen`
-`git clone https://github.com/sweetcheetah/dotfiles.git`
-`cp dotfiles/.screenrc ~`
+Everyone has their own preferences for software to use on the Raspberry Pi. I usually access my pi devices via ssh and use screen to manage sessions. This gives you the ability to keep your terminal sessions open even when your ssh connection drops. I use Vim as my editor. Feel free to use my public dotfiles if you don't have your own setup already.
+
+[Screen Cheat Sheet](https://devhints.io/screen)
+[Vim Cheat Sheet](http://vimsheet.com/)
+
+Install vim and screen.
+```sh
+sudo apt install -y vim screen
+```
+
+Clone dotfiles from my repo.
+```sh
+git clone https://github.com/sweetcheetah/dotfiles.git
+```
+
+Copy dotfiles to your home directory.
+```sh
+cp dotfiles/.screenrc ~
+```
 
 ## Software
 Recent version of Raspberry Pi OS (Lite recommended)
-`sudo apt update && sudo apt upgrade -y`
-`sudo apt install -y git ffmpeg python3-picamera2`
+Update your OS.
+```sh
+sudo apt update && sudo apt upgrade -y
+```
+
+Install prerequisite software.
+```sh
+sudo apt install -y git ffmpeg python3-picamera2
+```
 
 ## Test your setup
 Once you have the prerequisites installed, test that your Raspberry Pi can access the camera by running
-`rpicam-hello`
+```sh
+rpicam-hello
+```
 
 You will see output similar to the following:
 
-```
+```sh
 [1:02:43.794509002] [4812]  INFO Camera camera_manager.cpp:313 libcamera v0.3.0+65-6ddd79b5
 [1:02:43.940066198] [4817]  WARN RPiSdn sdn.cpp:40 Using legacy SDN tuning - please consider moving SDN inside rpi.denoise
 [1:02:43.943657409] [4817]  INFO RPI vc4.cpp:446 Registered camera /base/soc/i2c0mux/i2c@1/imx708@1a to Unicam device /dev/media1 and ISP device /dev/media2
@@ -43,24 +65,45 @@ If you see an error or a message that no cameras were found, you have a problem 
 The best way to install TinyCam is to clone the git repo and set it up to run as a systemd service.
 
 Start by cloning the repo.
-`git clone https://github.com/sweetcheetah/tinycam.git`
+```sh
+git clone https://github.com/sweetcheetah/tinycam.git
+```
+
 Change into the tinycam directory.
-`cd tinycam`
+```sh
+cd tinycam
+```
+
 Run the motion camera manually to make sure everything is working properly to this point.
-~/tinycam `python motion.py`
+```sh
+python motion.py
+```
 
 You should see messages similar to the following:
-```
+```sh
+messages...
 ```
 
 And when there is motion in front of the camera lens, messages like this:
-```
+```sh
+messages...
 ```
 
 Press control-c to exit the motion camera. You are now ready to install the camera to run as a systemd service.
 
-`./setup.sh`
+```sh
+./setup.sh
+```
+
+Congratulations! TinyCam is now running as a user systemd service. It will start automatically when the pi boots, and save video and images to the images directory under your home directory.
 
 ## Monitor
-`systemctl --user status tinycam`
-`journalctl --user -u tinycam.service`
+You can see the current status of the TinyCam service by running:
+```sh
+systemctl --user status tinycam
+```
+
+You can see the logs for the service by running:
+```sh
+journalctl --user -u tinycam.service
+```
