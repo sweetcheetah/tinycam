@@ -103,6 +103,12 @@ stop recording to 20240724-121740.mp4
 
 Press control-c to exit the motion camera. You are now ready to install the camera to run as a systemd service.
 
+First, make the setup script executable.
+
+```sh
+chmod +x ~/tinycam/setup.sh
+```
+
 ```sh
 ./setup.sh
 ```
