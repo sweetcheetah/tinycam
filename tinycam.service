@@ -2,8 +2,8 @@
 Description=TinyCam Service
 
 [Service]
-ExecStart=/usr/bin/python %h/motion.py
-WorkingDirectory=%h/images
+ExecStart=/usr/bin/python %h/tinycam/motion.py
+WorkingDirectory=%h/tinycam/images
 Environment=PYTHONUNBUFFERED=1
 Restart=on-failure
 
