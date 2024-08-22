@@ -125,3 +125,15 @@ You can see the logs for the service by running:
 ```sh
 journalctl --user -u tinycam.service
 ```
+
+## Environment Variables
+
+### TINYCAM_THRESHOLD
+
+### TINYCAM_STREAM
+
+### TINYCAM_MIN_VIDEO_LEN
+
+
+# TinyCam UI
+To make the most of your TinyCam camera, install the [TinyCam UI](https://github.com/sweetcheetah/tinycam-ui) to help you tag and review events.
