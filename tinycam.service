@@ -2,20 +2,23 @@
 Description=TinyCam Service
 
 [Service]
-ExecStart=/usr/bin/python %h/tinycam/motion.py
+Type=notify
+ExecStart=/usr/bin/python %h/tinycam/camera.py
 WorkingDirectory=%h/tinycam/images
+WatchdogSec=15
+RestartSec=10
+Restart=on-failure
 
 Environment=PYTHONUNBUFFERED=1
 # The threshold to decide when a frame has changed enough to qualify as motion
 Environment=TINYCAM_THRESHOLD=9
 # Boolean: whether or not to stream live video
-Environment=TINYCAM_STREAM=1
+Environment=TINYCAM_STREAM=0
 # The minimum length of captured video, in seconds
 Environment=TINYCAM_MIN_VIDEO_LEN=10
 # The number of consecutive frames of motion before a capture is triggered
 Environment=TINYCAM_TRIGGER=3
 
-Restart=on-failure
 
 [Install]
 WantedBy=default.target
