@@ -50,9 +50,8 @@ def main():
     rotation = os.getenv('TINYCAM_ROTATION',0)
 
     # TODO: refine this
-    # 1. configurable number of frames over mse thresh
-    # 2. streaming
-    # 3. retain original frame before motion to compare against instead of the prev frame
+    # 1. streaming
+    # 2. retain original frame before motion to compare against instead of the prev frame
     while True:
         current_frame = picam2.capture_buffer("lores")
         current_frame = current_frame[:w * h].reshape(h, w)
