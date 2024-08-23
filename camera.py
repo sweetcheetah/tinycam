@@ -37,17 +37,17 @@ def main():
 
     w, h = low_size
     previous_frame = None
-    reference_frame = None
+    #reference_frame = None
     encoding = False
     filestem = None
     request = None
     ltime = 0
     trigger_count = 0
 
-    mse_thresh = os.getenv('TINYCAM_THRESHOLD', 9)
-    min_video_length = os.getenv('TINYCAM_MIN_VIDEO_LEN',10.0)
-    trigger_frames = os.getenv('TINYCAM_TRIGGER',3)
-    rotation = os.getenv('TINYCAM_ROTATION',0)
+    mse_thresh: int = int(os.getenv('TINYCAM_THRESHOLD', 9))
+    min_video_length: float = float(os.getenv('TINYCAM_MIN_VIDEO_LEN',10.0))
+    trigger_frames: int = int(os.getenv('TINYCAM_TRIGGER',3))
+    #rotation: int = int(os.getenv('TINYCAM_ROTATION',0))
 
     # TODO: refine this
     # 1. streaming
