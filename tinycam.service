@@ -13,6 +13,7 @@ Environment=PYTHONUNBUFFERED=1
 # The threshold to decide when a frame has changed enough to qualify as motion
 Environment=TINYCAM_THRESHOLD=9
 # Boolean: whether or not to stream live video
+# This is not yet implemented
 Environment=TINYCAM_STREAM=0
 # The minimum length of captured video, in seconds
 Environment=TINYCAM_MIN_VIDEO_LEN=10
