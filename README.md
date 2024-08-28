@@ -1,5 +1,7 @@
 # TinyCam Camera
-This is the camera portion of my TinyCam software. It uses the excellent [Picamera2 Library](https://github.com/raspberrypi/picamera2) to access the camera, which offers much higher quality and lower resource utilization than other solutions. There is a streaming server which simply streams video from the camera. There is also a motion capture server which captures video in response to motion, with a preview image.
+TinyCam is a suite of software and hardware to help you build your own personalized network of security cameras. This is the camera portion of my TinyCam software. It uses the excellent [Picamera2 Library](https://github.com/raspberrypi/picamera2) to access the camera, which offers much higher quality and lower resource utilization than other solutions. There is a streaming server which simply streams video from the camera. There is also a motion capture server which captures video in response to motion, with a preview image.
+
+For other components of the TinyCam software, see [tinycam-ui](https://github.com/sweetcheetah/tinycam-ui) and TinyCam Server (coming soon).
 
 ## Hardware
 TinyCam requires a Raspberry Pi and an official Raspberry Pi Camera module. I have tested it on rpi 3b+, 4, 5, and zero w 1.1 with camera modules v2.1 and v3.0, both normal and noIR versions. I have tested it on 64 bit versions of Raspberry Pi on all of these models.
