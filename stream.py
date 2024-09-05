@@ -1,4 +1,5 @@
-#!/usr/bin/env python3 
+#!/usr/bin/env python3
+"""A simple streaming mjpg server"""
 
 import io
 import logging
@@ -24,7 +25,9 @@ PAGE = """\
 
 
 class StreamingOutput(io.BufferedIOBase):
-    def __init__(self):
+    """Simple class to create streaming output"""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.frame = None
         self.condition = Condition()
 
@@ -35,7 +38,9 @@ class StreamingOutput(io.BufferedIOBase):
 
 
 class StreamingHandler(server.BaseHTTPRequestHandler):
-    def do_GET(self):
+    """Simple class to handle http requests"""
+    def do_GET(self): # pylint: disable=invalid-name
+        """Handle GET requests"""
         if self.path == '/':
             self.send_response(301)
             self.send_header('Location', '/index.html')
@@ -65,21 +70,22 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(frame)
                     self.wfile.write(b'\r\n')
-            except Exception as e:
+            except BrokenPipeError as exception:
                 logging.warning(
                     'Removed streaming client %s: %s',
-                    self.client_address, str(e))
+                    self.client_address, str(exception))
         else:
             self.send_error(404)
             self.end_headers()
 
 
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
+    """Configuration for the http server"""
     allow_reuse_address = True
     daemon_threads = True
 
 
-picam2 = Picamera2()
+picam2 = Picamera2() # pylint: disable=not-callable
 picam2.configure(picam2.create_video_configuration(main={"size": (640, 480)}))
 output = StreamingOutput()
 picam2.start_recording(MJPEGEncoder(), FileOutput(output))
