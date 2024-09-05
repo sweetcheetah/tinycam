@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""TinyCam"""
 import time
 import os
 import threading
@@ -11,10 +12,12 @@ from picamera2.outputs import FfmpegOutput
 from systemd import Notify
 #import streaming
 
+
 def main():
+    """Main method to start the camera"""
     #streaming_server = streaming.TinyCamStreamingServer()
     notify: Notify = Notify()
-    
+
     if notify.enabled():
         notify.status("Initializing TinyCam")
 
@@ -44,9 +47,9 @@ def main():
     ltime = 0
     trigger_count = 0
 
-    mse_thresh: int = int(os.getenv('TINYCAM_THRESHOLD', 9))
-    min_video_length: float = float(os.getenv('TINYCAM_MIN_VIDEO_LEN',10.0))
-    trigger_frames: int = int(os.getenv('TINYCAM_TRIGGER',3))
+    mse_thresh: int = int(os.getenv('TINYCAM_THRESHOLD', "9"))
+    min_video_length: float = float(os.getenv('TINYCAM_MIN_VIDEO_LEN',"10.0"))
+    trigger_frames: int = int(os.getenv('TINYCAM_TRIGGER',"3"))
     #rotation: int = int(os.getenv('TINYCAM_ROTATION',0))
 
     # TODO: refine this
@@ -63,20 +66,20 @@ def main():
 
         if previous_frame is not None:
             # Measure pixel differences between current and previous frame
-            mse = np.square(np.subtract(current_frame, previous_frame)).mean()
-            
+            mse: float = np.square(np.subtract(current_frame, previous_frame)).mean()
+
             if mse > mse_thresh:
                 trigger_count = trigger_count + 1
                 if trigger_count > trigger_frames:
                     if not encoding:
                         filestem = time.strftime("%Y%m%d-%H%M%S")
-                        logging.info(f"New motion {mse} over threshold {mse_thresh}")
+                        logging.info("New motion %f over threshold %i", mse, mse_thresh)
                         request = picam2.capture_request()
                         request.save("main", f"{filestem}.jpg")
-                        logging.info(f"preview saved to {filestem}.jpg")
+                        logging.info("Preview saved to %s.jpg", filestem)
 
                         filename = f"{filestem}.mp4"
-                        logging.info(f"start recording to {filename}")
+                        logging.info("Start recording to %s", filename)
                         encoder.output = FfmpegOutput(filename)
                         picam2.start_encoder(encoder)
                         encoding = True
@@ -85,16 +88,16 @@ def main():
             else:
                 if encoding and time.time() - ltime > min_video_length:
                     picam2.stop_encoder()
-                    logging.info(f"stop recording to {filename}")
+                    logging.info("Stop recording to %s", filename)
                     encoding = False
                     filestem= None
                     request.release()
         previous_frame = current_frame
-        
+
         if notify.enabled():
             notify.notify()
 
-        
+
 
 if __name__ == "__main__":
     main()
