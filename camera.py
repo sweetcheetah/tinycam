@@ -2,7 +2,7 @@
 """TinyCam"""
 import time
 import os
-import threading
+#import threading
 import logging
 import numpy as np
 from picamera2 import Picamera2
@@ -28,7 +28,7 @@ def main():
 
     high_size = (1280,720)
     low_size = (320, 240)
-    picam2 = Picamera2()
+    picam2 = Picamera2() # pylint: disable=not-callable
 
     video_config = picam2.create_video_configuration(
         main={"size": high_size, "format": "RGB888"},

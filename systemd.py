@@ -32,6 +32,7 @@ import os
 import socket
 
 class Notify():
+    """Simple class to handle systemd watchdog notifications"""
     def __init__(self):
         self.socket = socket.socket(
             family=socket.AF_UNIX,
@@ -53,7 +54,7 @@ class Notify():
 
     def status(self, msg):
         """Set a service status message"""
-        self._send("STATUS=%s\n" % (msg,))
+        self._send(f"STATUS={msg}\n")
 
     def notify(self):
         """Report a healthy service state"""
