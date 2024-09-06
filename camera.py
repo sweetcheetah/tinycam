@@ -4,7 +4,6 @@ import time
 import os
 #import threading
 import logging
-from rotation import add_rotation
 import numpy as np
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder
