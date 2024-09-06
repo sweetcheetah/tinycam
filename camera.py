@@ -4,6 +4,7 @@ import time
 import os
 #import threading
 import logging
+from rotation import add_rotation
 import numpy as np
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder
@@ -26,6 +27,12 @@ def main():
         format='%(asctime)s %(levelname)s %(message)s'
     )
 
+    # environment
+    mse_thresh: int = int(os.getenv('TINYCAM_THRESHOLD', "9"))
+    min_video_length: float = float(os.getenv('TINYCAM_MIN_VIDEO_LEN',"10.0"))
+    trigger_frames: int = int(os.getenv('TINYCAM_TRIGGER',"3"))
+    rotation: int = int(os.getenv('TINYCAM_ROTATION',"0"))
+
     high_size = (1280,720)
     low_size = (320, 240)
     picam2 = Picamera2() # pylint: disable=not-callable
@@ -34,6 +41,10 @@ def main():
         main={"size": high_size, "format": "RGB888"},
         lores={"size": low_size, "format": "YUV420"}
     )
+
+    if rotation != 0:
+        video_config["transform"] = rotation.transform(rotation)
+
     picam2.configure(video_config)
     encoder = H264Encoder(1000000)
     picam2.start()
@@ -47,10 +58,6 @@ def main():
     ltime = 0
     trigger_count = 0
 
-    mse_thresh: int = int(os.getenv('TINYCAM_THRESHOLD', "9"))
-    min_video_length: float = float(os.getenv('TINYCAM_MIN_VIDEO_LEN',"10.0"))
-    trigger_frames: int = int(os.getenv('TINYCAM_TRIGGER',"3"))
-    #rotation: int = int(os.getenv('TINYCAM_ROTATION',0))
 
     # TODO: refine this
     # 1. streaming
