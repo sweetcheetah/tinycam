@@ -50,7 +50,7 @@ def main():
     mse_thresh: int = int(os.getenv('TINYCAM_THRESHOLD', "9"))
     min_video_length: float = float(os.getenv('TINYCAM_MIN_VIDEO_LEN',"10.0"))
     trigger_frames: int = int(os.getenv('TINYCAM_TRIGGER',"3"))
-    #rotation: int = int(os.getenv('TINYCAM_ROTATION',0))
+    images_dir: str = os.getenv('IMAGES_DIR',".")
 
     # TODO: refine this
     # 1. streaming
@@ -75,12 +75,12 @@ def main():
                         filestem = time.strftime("%Y%m%d-%H%M%S")
                         logging.info("New motion %f over threshold %i", mse, mse_thresh)
                         request = picam2.capture_request()
-                        request.save("main", f"{filestem}.jpg")
+                        request.save("main", f"{images_dir}/{filestem}.jpg")
                         logging.info("Preview saved to %s.jpg", filestem)
 
                         filename = f"{filestem}.mp4"
                         logging.info("Start recording to %s", filename)
-                        encoder.output = FfmpegOutput(filename)
+                        encoder.output = FfmpegOutput(f"{images_dir}/{filename}")
                         picam2.start_encoder(encoder)
                         encoding = True
 
