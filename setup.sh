@@ -1,4 +1,8 @@
 #!/bin/sh
+echo "Install prerequisites"
+sudo apt install python3-picamera2 python3-opencv opencv-data
+
+
 echo "Install systemd service for TinyCam"
 mkdir -p $HOME/.config/systemd/user/
 mkdir -p $HOME/tinycam/images/
