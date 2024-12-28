@@ -77,12 +77,7 @@ Change into the tinycam directory.
 cd tinycam
 ```
 
-First, make the setup script executable.
-
-```sh
-chmod +x ~/tinycam/setup.sh
-```
-Then, run the script.
+Run the script.
 
 ```sh
 ./setup.sh
