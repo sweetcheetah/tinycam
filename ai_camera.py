@@ -120,8 +120,18 @@ def get_labels() -> List[str]:
         labels = [label for label in labels if label and label != "-"]
     return labels
 
+def remove_excluded(detections: List[Detection]):
+    """Remove tags that have been excluded from the list of detected tags"""
+    remaining = detections
+    for d in remaining:
+        tag = get_labels()[int(d.category)]
+        if tag in excluded_tags:
+            remaining.remove(d)
+    
+    return remaining
 
-def parse_detections(metadata: dict):
+    
+def parse_detections(metadata: dict) -> List[Detection]:
     """Parse the output tensor into a number of detected objects, scaled to the ISP output."""
     logging.debug('parse_detections')
     global last_detections
@@ -202,6 +212,7 @@ if __name__ == "__main__":
 
     while True:
         last_results = parse_detections(picam2.capture_metadata())
+        last_results = remove_excluded(last_results)
 
         if len(last_results) > 0:
             logging.debug(f"last_results: {last_results}")
