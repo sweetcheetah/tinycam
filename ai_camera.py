@@ -32,11 +32,11 @@ encoder = H264Encoder(1000000)
 
 
 # ENV VARS
-model: str = os.getenv('MODEL',"/usr/share/imx500-models/imx500_network_ssd_mobilenetv2_fpnlite_320x320_pp.rpk")
+model: str = os.getenv('TINYCAM_MODEL',"/usr/share/imx500-models/imx500_network_ssd_mobilenetv2_fpnlite_320x320_pp.rpk")
 thresh: str = os.getenv('TINYCAM_THRESHOLD', '0.55')
-images_dir: str = os.getenv('IMAGES_DIR',".")
-api_server: str = os.getenv('API_SERVER',"http://localhost:3000")
-excluded_tags: str = os.getenv('EXCLUDED_TAGS','')
+images_dir: str = os.getenv('TINYCAM_IMAGES_DIR',".")
+api_server: str = os.getenv('TINYCAM_API_SERVER',"http://localhost:3000")
+excluded_tags: str = os.getenv('TINYCAM_EXCLUDED_TAGS','')
 min_capture_seconds: str = os.getenv('TINYCAM_MIN_VIDO_LEN','10')
 
 
