@@ -22,6 +22,7 @@ from typing import List
 import logging
 import sys
 import os
+import json
 import numpy as np
 import time
 import requests
@@ -38,6 +39,7 @@ images_dir: str = os.getenv('TINYCAM_IMAGES_DIR',".")
 api_server: str = os.getenv('TINYCAM_API_SERVER',"http://localhost:3000")
 excluded_tags: str = os.getenv('TINYCAM_EXCLUDED_TAGS','')
 min_capture_seconds: str = os.getenv('TINYCAM_MIN_VIDO_LEN','10')
+camera: str = os.getenv('TINYCAM_CAMERA_NAME', 'tinycam')
 
 
 class Detection:
@@ -73,21 +75,37 @@ class Capture:
         # TODO test
         path: str = "/api/tags"
         url: str = f"{api_server}{path}"
-        unique_tags = list(set([t.tag for t in self.tags]))
-        unique_tags_list = [ Tag(asset_id=self.asset_id, tag=t) for t in unique_tags]
+        unique_tags = list(set([get_labels()[int(t.tag)] for t in self.tags]))
+        unique_tags_list = [ 
+            {
+                "asset_id": f"{self.asset_id}.mp4",
+                "tag": t,
+                "camera": camera,
+                "source": f"ai: {os.path.basename(model)}"
+            } 
+        for t in unique_tags]
 
-        requests.post(url, data=unique_tags_list)
-        r = requests.post(url=url,json=unique_tags_list)
+        # convert list of tags to json
+        unique_tags_list_str = json.dumps(
+            unique_tags_list
+        )
+        logging.info(f"POST tags to {url}: {unique_tags_list_str}")
 
-        logging.info(r.status_code)
-        logging.info(r.json())
+        try:
+            r = requests.post(url=url,json=unique_tags_list)
+            logging.info(r.status_code)
+            logging.info(r.json())
+
+        except:
+            logging.error(f"POST to {url} failed")
+
     
-
     def update_tags(self,detections: List[Detection]) -> None:
         """Add tags to this Capture"""
         for detection in detections:
             logging.info(f"detection: {detection}")
             self.tags.append(Tag(asset_id=self.asset_id,tag=detection.category))
+
 
     def start_or_continue(self,request,filestem: str) -> None:
         if not self.is_capturing:
@@ -109,8 +127,8 @@ class Capture:
 class Tag:
   asset_id: str
   tag: str
-  camera: str = os.getenv('CAMERA_NAME', 'tinycam')
-    
+  camera: str = camera
+
             
 @lru_cache
 def get_labels() -> List[str]:
@@ -122,10 +140,11 @@ def get_labels() -> List[str]:
 
 def remove_excluded(detections: List[Detection]):
     """Remove tags that have been excluded from the list of detected tags"""
+    excluded_tags_list: List[str] = excluded_tags.split(',')
     remaining = detections
     for d in remaining:
         tag = get_labels()[int(d.category)]
-        if tag in excluded_tags:
+        if tag in excluded_tags_list:
             remaining.remove(d)
     
     return remaining
