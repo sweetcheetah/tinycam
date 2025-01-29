@@ -109,13 +109,13 @@ The minimum length of captured video, in seconds.
 The number of consecutive frames of motion before a capture is triggered.
 
 ### TINYCAM_MODEL
-The full path to the model to be used for object recognition.
+The full path to the model to be used for object recognition. (AI service only)
 
 ### TINYCAM_API_SERVER
-The address of the API server used to tag images and videos, minus the path. (e.g. https://localhost:3000)
+The address of the API server used to tag images and videos, minus the path. (e.g. https://localhost:3000) (AI service only)
 
 ### TINYCAM_EXCLUDED_TAGS
-A list of tags to exclude from capture for this camera.
+A list of tags to exclude from capture for this camera. (AI service only)
 
 # TinyCam UI
 To make the most of your TinyCam camera, install the [TinyCam UI](https://github.com/sweetcheetah/tinycam-ui) to help you tag and review events.
