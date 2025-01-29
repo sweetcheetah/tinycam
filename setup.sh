@@ -1,10 +1,10 @@
 #!/bin/sh
 echo "Install prerequisites"
-sudo apt install python3-picamera2 python3-opencv opencv-data
+sudo apt install ffmpeg python3-picamera2 python3-opencv opencv-data
 
 # AI Camera
 if [$1 = "ai"]; then
-    sudo apt install imx500-all
+    sudo apt install -y imx500-all
     sudo apt install -y python3-munkres
 fi
 

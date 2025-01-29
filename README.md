@@ -37,15 +37,8 @@ sudo apt update && sudo apt upgrade -y
 
 Install prerequisite software.
 ```sh
-sudo apt install -y git ffmpeg python3-picamera2
+sudo apt install -y git
 ```
-
-Install AI camera software if you are using the Raspberry Pi AI camera module (IMX500).
-```sh
-sudo apt install -y imx500-all python3-opencv opencv-data python3-munkres
-```
-
-
 
 ## Test your setup
 Once you have the prerequisites installed, test that your Raspberry Pi can access the camera by running
@@ -84,10 +77,10 @@ Change into the tinycam directory.
 cd tinycam
 ```
 
-Run the script.
+Run the setup script. Add "ai" as an argument if you have the Raspberry Pi AI Camera.
 
 ```sh
-./setup.sh
+./setup.sh ai
 ```
 
 Congratulations! TinyCam should now be running as a user systemd service. It will start automatically when the pi boots, and save video and images to the tinycam/images directory under your home directory.
