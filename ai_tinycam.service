@@ -25,7 +25,7 @@ Environment=TINYCAM_CAMERA_NAME=crowcam
 # The API server used to tag events
 Environment=TINYCAM_API_SERVER=http://localhost:3000
 # A comma delimited list of tags to ignore for this camera
-Environment=TINYCAM_EXCLUDED_TAGS=car,book
+#Environment=TINYCAM_EXCLUDED_TAGS=car,book
 
 
 
