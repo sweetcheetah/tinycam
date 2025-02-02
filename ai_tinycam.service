@@ -1,9 +1,10 @@
+# create a service file with diff params and copy it in setup.sh
 [Unit]
 Description=TinyCam Service
 
 [Service]
-Type=notify
-ExecStart=/usr/bin/python %h/tinycam/camera.py
+Type=exec
+ExecStart=/usr/bin/python %h/tinycam/ai_camera.py
 WorkingDirectory=%h/tinycam/images
 WatchdogSec=15
 RestartSec=10
@@ -19,6 +20,13 @@ Environment=TINYCAM_STREAM=0
 Environment=TINYCAM_MIN_VIDEO_LEN=10
 # The number of consecutive frames of motion before a capture is triggered or stopped
 Environment=TINYCAM_TRIGGER=3
+# The camera name that will appear in the UI and in tagging operations
+Environment=TINYCAM_CAMERA_NAME=crowcam
+# The API server used to tag events
+Environment=TINYCAM_API_SERVER=http://localhost:3000
+# A comma delimited list of tags to ignore for this camera
+#Environment=TINYCAM_EXCLUDED_TAGS=car,book
+
 
 
 [Install]

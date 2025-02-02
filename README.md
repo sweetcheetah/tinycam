@@ -1,7 +1,7 @@
 # TinyCam Camera
 TinyCam is a suite of software and 3D printed cases to help you build your own personalized network of security cameras using Raspberry Pi computers. This is the camera portion of my TinyCam software. It uses the excellent [Picamera2 Library](https://github.com/raspberrypi/picamera2) to access the camera, which offers much higher quality and lower resource utilization than other solutions. There is a streaming server which simply streams video from the camera. There is also a motion capture server which captures video in response to motion, with a preview image.
 
-For other components of TinyCam, see [tinycam-ui](https://github.com/sweetcheetah/tinycam-ui) and TinyCam Server (coming soon).
+For other components of TinyCam, see [tinycam-ui](https://github.com/sweetcheetah/tinycam-ui).
 
 ## Hardware
 TinyCam requires a Raspberry Pi and an official Raspberry Pi Camera module. I have tested it on rpi 3b+, 4, 5, and zero w 1.1 with camera modules v2.1 and v3.0, both normal and noIR versions. I have tested it on 64 bit versions of Raspberry Pi on all of these models.
@@ -37,7 +37,7 @@ sudo apt update && sudo apt upgrade -y
 
 Install prerequisite software.
 ```sh
-sudo apt install -y git ffmpeg python3-picamera2
+sudo apt install -y git
 ```
 
 ## Test your setup
@@ -77,15 +77,10 @@ Change into the tinycam directory.
 cd tinycam
 ```
 
-First, make the setup script executable.
+Run the setup script. Add "ai" as an argument if you have the Raspberry Pi AI Camera.
 
 ```sh
-chmod +x ~/tinycam/setup.sh
-```
-Then, run the script.
-
-```sh
-./setup.sh
+./setup.sh ai
 ```
 
 Congratulations! TinyCam should now be running as a user systemd service. It will start automatically when the pi boots, and save video and images to the tinycam/images directory under your home directory.
@@ -112,6 +107,15 @@ The minimum length of captured video, in seconds.
 
 ### TINYCAM_TRIGGER
 The number of consecutive frames of motion before a capture is triggered.
+
+### TINYCAM_MODEL
+The full path to the model to be used for object recognition. (AI service only)
+
+### TINYCAM_API_SERVER
+The address of the API server used to tag images and videos, minus the path. (e.g. https://localhost:3000) (AI service only)
+
+### TINYCAM_EXCLUDED_TAGS
+A list of tags to exclude from capture for this camera. (AI service only)
 
 # TinyCam UI
 To make the most of your TinyCam camera, install the [TinyCam UI](https://github.com/sweetcheetah/tinycam-ui) to help you tag and review events.
