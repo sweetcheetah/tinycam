@@ -6,10 +6,7 @@ An event triggers an image capture and triggers a video capture that lasts until
 only excluded objects are in frame.
 Once the video capture concludes, the event is sent to the local tinycam-ui API to tag 
 the video and poster image
-configuration options:
-path for ml model
-API server (e.g. http://localhost:3000), should not include path
-excluded tags
+see env vars below for configuration options
 """
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder
@@ -39,6 +36,7 @@ images_dir: str = os.getenv('TINYCAM_IMAGES_DIR',".")
 api_server: str = os.getenv('TINYCAM_API_SERVER',"http://localhost:3000")
 excluded_tags: str = os.getenv('TINYCAM_EXCLUDED_TAGS','')
 min_capture_seconds: str = os.getenv('TINYCAM_MIN_VIDO_LEN','10')
+trigger_frames: str = os.gentenv('TINYCAM_TRIGGER', '3')
 camera: str = os.getenv('TINYCAM_CAMERA_NAME', 'tinycam')
 
 
@@ -64,6 +62,7 @@ class Capture:
         self.poster = None
         self.start: float = None
         self.tags: List[Tag] = []
+        self.consecutive_trigger_frames: int = 0
 
     def stop(self) -> None:
         picam2.stop_encoder()
@@ -72,7 +71,6 @@ class Capture:
 
     def tag(self) -> None:
         """POST self.tags to tagging API"""
-        # TODO test
         path: str = "/api/tags"
         url: str = f"{api_server}{path}"
         unique_tags = list(set([get_labels()[int(t.tag)] for t in self.tags]))
@@ -95,11 +93,16 @@ class Capture:
             r = requests.post(url=url,json=unique_tags_list)
             logging.info(r.status_code)
             logging.info(r.json())
+            r.raise_for_status()
 
-        except:
-            logging.error(f"POST to {url} failed")
+        except requests.exceptions.Timeout:
+            logging.error(f"POST to {url} timed out")
+        except requests.exceptions.TooManyRedirects:
+            logging.error(f"POST to {url} had too many redirects")
+        except requests.exceptions.RequestException as e:
+            logging.error(f"POST to {url} failed: {e}")
 
-    
+
     def update_tags(self,detections: List[Detection]) -> None:
         """Add tags to this Capture"""
         for detection in detections:
@@ -108,6 +111,8 @@ class Capture:
 
 
     def start_or_continue(self,request,filestem: str) -> None:
+        self.consecutive_trigger_frames = 0
+
         if not self.is_capturing:
             self.is_capturing = True
             self.start = time.monotonic()
@@ -152,7 +157,6 @@ def remove_excluded(detections: List[Detection]):
     
 def parse_detections(metadata: dict) -> List[Detection]:
     """Parse the output tensor into a number of detected objects, scaled to the ISP output."""
-    logging.debug('parse_detections')
     global last_detections
     bbox_normalization = intrinsics.bbox_normalization
     bbox_order = intrinsics.bbox_order
@@ -228,11 +232,12 @@ if __name__ == "__main__":
 
     last_results = None
     asset_capture = None
+    
 
     while True:
         last_results = parse_detections(picam2.capture_metadata())
         last_results = remove_excluded(last_results)
-
+        
         if len(last_results) > 0:
             logging.debug(f"last_results: {last_results}")
             request = picam2.capture_request()
@@ -245,6 +250,10 @@ if __name__ == "__main__":
         else:
             if asset_capture and asset_capture.is_capturing is True:
                 if time.monotonic() - asset_capture.start > float(min_capture_seconds):
-                    asset_capture.stop()
-                    asset_capture = None
-
+                    asset_capture.consecutive_trigger_frames += 1
+                    
+                    if asset_capture.consecutive_trigger_frames > trigger_frames:
+                        asset_capture.stop()
+                        asset_capture = None
+                    else:
+                        logging.debug(f"Not enough trigger frames to stop capture: {asset_capture.consecutive_trigger_frames}")
