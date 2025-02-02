@@ -36,7 +36,7 @@ images_dir: str = os.getenv('TINYCAM_IMAGES_DIR',".")
 api_server: str = os.getenv('TINYCAM_API_SERVER',"http://localhost:3000")
 excluded_tags: str = os.getenv('TINYCAM_EXCLUDED_TAGS','')
 min_capture_seconds: str = os.getenv('TINYCAM_MIN_VIDO_LEN','10')
-trigger_frames: str = os.gentenv('TINYCAM_TRIGGER', '3')
+trigger_frames: str = os.getenv('TINYCAM_TRIGGER', '3')
 camera: str = os.getenv('TINYCAM_CAMERA_NAME', 'tinycam')
 
 
@@ -252,7 +252,7 @@ if __name__ == "__main__":
                 if time.monotonic() - asset_capture.start > float(min_capture_seconds):
                     asset_capture.consecutive_trigger_frames += 1
                     
-                    if asset_capture.consecutive_trigger_frames > trigger_frames:
+                    if asset_capture.consecutive_trigger_frames > int(trigger_frames):
                         asset_capture.stop()
                         asset_capture = None
                     else:
