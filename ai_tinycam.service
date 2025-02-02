@@ -3,7 +3,7 @@
 Description=TinyCam Service
 
 [Service]
-Type=notify
+Type=exec
 ExecStart=/usr/bin/python %h/tinycam/ai_camera.py
 WorkingDirectory=%h/tinycam/images
 WatchdogSec=15
